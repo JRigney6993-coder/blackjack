@@ -1,0 +1,13 @@
+{
+  "name": "blackjack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "deck.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Jake Rigney (https://github.com/JRigney6993-coder)",
+  "contributors": [{"name": "", "url": "", "email": ""}],
+  "license": "MIT"
+}
