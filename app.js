@@ -14,9 +14,9 @@ app.use(bodyParser.json());
 app.use(cors());
 
 connectDB();
-app.use(routes);
+// app.use(routes);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Server started on http://localhost:${PORT}`);
 });
