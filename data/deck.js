@@ -253,3 +253,5 @@ let deck = [
         "image": "https://www.deckofcardsapi.com/static/img/KS.png"
     }
 ];
+
+module.exports = deck;
