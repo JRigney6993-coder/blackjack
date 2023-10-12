@@ -38,9 +38,11 @@ function calculateTotal(hand) {
     let total = 0;
     let aces = 0;
 
-    for (let card of hand) {
+    for (let card of hand) 
+    {
         // Check if the card value is an array, which shows it's an Ace
-        if (Array.isArray(card.value)) {
+        if (Array.isArray(card.value)) 
+        {
             // Assuming the ace's value is 11 for now
             total += 11;
             aces++;
@@ -51,21 +53,30 @@ function calculateTotal(hand) {
     }
 
     // If the player has an ace and goes over 21 it will be seen as 1 instead of 11
-    while (total > 21 && aces-- && hand === player) {
+    while (total > 21 && aces-- && hand === player) 
+    {
         total -= 10;
     }
 
     return total;
 }
 
-function determineWinner(playerHand, dealerHand) {
+function determineWinner(playerHand, dealerHand, secret) {
     const playerTotal = calculateTotal(playerHand);
     const dealerTotal = calculateTotal(dealerHand);
 
     // Check if the player has busted or if the dealer's total is less than or equal to 21 and greater than or equal to the player's total
-    if (playerTotal > 21 || (dealerTotal <= 21 && dealerTotal >= playerTotal)) return "Dealer";
+    if (playerTotal > 21 || (dealerTotal <= 21 && dealerTotal >= playerTotal))
+    {
+        // (I'll add loss here for the mongo database using the secret)
+        return "Dealer"
+    };
     // Check if the dealer has busted or if the player's total is greater than the dealer's total
-    if (dealerTotal > 21 || playerTotal > dealerTotal) return "Player";
+    if (dealerTotal > 21 || playerTotal > dealerTotal) 
+    {
+        // (I'll add win here for the mongo database using the secret)
+        return "Player"
+    };
     return "Draw";
 }
 
