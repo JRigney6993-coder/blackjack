@@ -16,11 +16,11 @@ module.exports = function (passport) {
                 console.log('Local Strategy Works');
                 // Match user
                 User.findOne({ username: username })
-                    .then(user => 
+                    .then((user) => 
                     {
                         if (!user) 
                         {
-                            return done(null, false, { message: 'That username is not registered' });
+                            return done(null, false, { message: 'That email or username is not registered' });
                         }
                         bcrypt.compare(password, user.password, (err, isMatch) => 
                         {
