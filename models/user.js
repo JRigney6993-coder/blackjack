@@ -19,6 +19,14 @@ const UserSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    wins: {
+        type: Number,
+        default: 0
+    },
+    losses: {
+        type: Number,
+        default: 0
     }
 }, { collection: 'Users' });
 const User = mongoose.model('User', UserSchema);
