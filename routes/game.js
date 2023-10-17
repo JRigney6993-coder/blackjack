@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const deckData = require('../data/deck');
+const User = require('../models/user');
 
 let deck = [];
 const setupDeck = () => [...deckData];
@@ -28,12 +29,23 @@ router.post('/hit', (req, res) => {
     res.send(hand);
 });
 
-router.post('/determineWinner', (req, res) => {
+router.post('/determineWinner', async (req, res) => {
     const { playerHand, dealerHand } = req.body;
     const winner = determineWinner(playerHand, dealerHand);
 
+    if (req.isAuthenticated()) { 
+        const userId = req.user._id;
+
+        if (winner === "Player") {
+            await User.findByIdAndUpdate(userId, { $inc: { wins: 1 } });
+        } else if (winner === "Dealer") {
+            await User.findByIdAndUpdate(userId, { $inc: { losses: 1 } });
+        }
+    }
+
     res.send({ winner });
 });
+
 
 
 // Blackjack game functions
