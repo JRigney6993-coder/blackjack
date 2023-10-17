@@ -1,61 +1,46 @@
-const connectDB = require('./config/db');
-const routes = require('./routes');
-const express = require('express');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const bodyParser = require('body-parser');
-const passport = require('passport')
-const morgan = require('morgan')
-const flash = require('connect-flash')
+const express = require('express'); //hi
+const session = require('express-session');
+const flash = require('connect-flash');
+const morgan = require('morgan');
+const passport = require('passport');
 require('./config/passport')(passport)
+require('dotenv').config()
+const router = express.Router();
+const app = express();
+const mongoose = require('mongoose');
 const expressEJSLayout = require('express-ejs-layouts')
 
-connectDB();
+try {
+    mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+        .then(() => { console.log(`connected on Port: ${process.env.PORT}`) })
+        .catch((err) => { console.log(err) })
+} catch (error) {
 
-dotenv.config({ path: './.env' });
-
-const app = express();
-
-// app.use(bodyParser.json());
-// app.use(cors());
-
-// const user = {
-//     Username: "VeryCoolUsername",
-//     Password: "VerySecurePassword",
-// }
-
-// app.set('view engine', 'ejs')
-// app.get('/', (req, res) => {
-//     res.render('pages/index', {
-//         user: user
-//     })
-// })
+}
 
 app.use(morgan('tiny'))
-app.set('view engine', ejs)
-app.use(expressEJSLayout);
-app.use(express.urlencoded({extended: false}))
 
-app.use(session({secret:'secret',resave:true,saveUnitialized:true}))
+app.set('view engine', 'ejs')
+app.use(express.urlencoded({ extended: false }))
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUnitialized: true
+}))
+
 app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(flash())
-app.use((req,res,next)=>{
-    res.locals.success_msg = req.flash('success_msg');
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('sucess message');
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');
     next()
 })
 
-//routes
-app.use('/',require('./routes/index'))
-app.use('/users',require('./routes/users'))
+app.use('/', require('./routes/index'));
+app.use('/users', require('./routes/users'));
 
-
-// app.use(routes);  // Uncomment this if you want to use the routes
-
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-    console.log(`Server started on http://localhost:${PORT}`);
-});
+app.listen(process.env.PORT || 4000)
