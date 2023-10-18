@@ -50,6 +50,31 @@ router.post('/determineWinner', async (req, res) => {
     res.send({ winner });
 });
 
+router.get('/topPlayers', async (req, res) => {
+    try {
+        const topPlayers = await User.aggregate([
+            {
+                $project: {
+                    first_name: 1,
+                    last_name: 1,
+                    difference: { $subtract: ["$wins", "$losses"] }
+                }
+            },
+            {
+                $sort: {
+                    difference: -1
+                }
+            },
+            {
+                $limit: 10
+            }
+        ]);
+
+        res.send(topPlayers);
+    } catch (error) {
+        res.status(500).send({ message: "Error fetching top players", error });
+    }
+});
 
 
 // Blackjack game functions
