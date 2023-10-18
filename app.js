@@ -44,6 +44,6 @@ app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 app.use('/game', require('./routes/game'));
 
-app.use(express.static('public'));
+app.use(express.static('./views/public'));
 
 app.listen(process.env.PORT || 4000)
