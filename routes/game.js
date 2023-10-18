@@ -3,8 +3,11 @@ const router = express.Router();
 const deckData = require('../data/deck');
 const User = require('../models/user');
 
-let deck = [];
-const setupDeck = () => [...deckData];
+let deck = setupDeck();
+
+function setupDeck() {
+    return [...deckData];
+}
 
 router.get('/play', (req, res) => {
     res.render('pages/table', {
@@ -30,25 +33,26 @@ router.post('/hit', (req, res) => {
     res.send(newCard);
 });
 
-router.post('/determineWinner', async (req, res) => {
-    let { playerHand, dealerHand } = req.body;
+router.post('/determineWinner', (req, res) => {
+    const { playerHand, dealerHand } = req.body;
 
-    // Let the dealer play their turn fully
-    dealerHand = dealerPlay(dealerHand, deck);
+    const playerTotal = calculateTotal(playerHand);
+    const dealerTotal = calculateTotal(dealerHand);
+    console.log(playerTotal,dealerTotal)
 
-    const winner = determineWinner(playerHand, dealerHand);
-
-    if (req.isAuthenticated()) {
-        const userId = req.user._id;
-
-        if (winner === "Player") {
-            await User.findByIdAndUpdate(userId, { $inc: { wins: 1 } });
-        } else if (winner === "Dealer") {
-            await User.findByIdAndUpdate(userId, { $inc: { losses: 1 } });
-        }
+    if (playerTotal > 21 && dealerTotal > 21) {
+        return res.json({ winner: 'Tie' });
+    } else if (playerTotal > 21) {
+        return res.json({ winner: 'Dealer' });
+    } else if (dealerTotal > 21) {
+        return res.json({ winner: 'Player' });
+    } else if (playerTotal > dealerTotal) {
+        return res.json({ winner: 'Player' });
+    } else if (playerTotal < dealerTotal) {
+        return res.json({ winner: 'Dealer' });
+    } else {
+        return res.json({ winner: 'Tie' });
     }
-
-    res.send({ winner });
 });
 
 
@@ -140,26 +144,13 @@ function calculateTotal(hand) {
 }
 
 function dealerPlay(dealerHand, deck) {
+    
     while (calculateTotal(dealerHand) < 17) {
         dealerHand.push(getRandomCard(deck));
     }
     return dealerHand;
 }
 
-
-function determineWinner(playerHand, dealerHand) {
-    const playerTotal = calculateTotal(playerHand);
-    const dealerTotal = calculateTotal(dealerHand);
-    
-
-    if (playerTotal > 21) return "Dealer"; // Player busts
-    if (dealerTotal > 21) return "Player"; // Dealer busts
-
-    // Draw should be the last condition checked
-    if (playerTotal === dealerTotal) return "Draw"; 
-
-    return playerTotal > dealerTotal ? "Player" : "Dealer";
-}
 
 
 module.exports = router;
