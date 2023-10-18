@@ -143,180 +143,191 @@
 
 
     <script>
-//         let playerHand = [];
-// let dealerHand = [];
-// let dealerTurn = false;
+let playerHand = [];
+let dealerHand = [];
+let dealerTurn = false;
 
-// async function fetchTopPlayers() {
-//     const response = await fetch('http://localhost:4001/game/topPlayers');
-//     const players = await response.json();
+async function fetchTopPlayers() {
+    const response = await fetch('http://localhost:4001/game/topPlayers');
+    const players = await response.json();
 
-//     const leaderboard = document.querySelector('.leaderboard-list');
-//     leaderboard.innerHTML = '';
+    const leaderboard = document.querySelector('.leaderboard-list');
+    leaderboard.innerHTML = '';
 
-//     players.forEach(player => {
-//         const li = document.createElement('li');
-//         li.textContent = `${player.first_name} ${player.last_name} - Score: ${player.difference}`;
-//         leaderboard.appendChild(li);
-//     });
-// }
+    players.forEach(player => {
+        const li = document.createElement('li');
+        li.textContent = `${player.first_name} ${player.last_name} - Score: ${player.difference}`;
+        leaderboard.appendChild(li);
+    });
+}
 
-// async function setupDeck() {
-//     await fetch('http://localhost:4001/game/setupDeck');
-// }
+async function setupDeck() {
+    await fetch('http://localhost:4001/game/setupDeck');
+}
 
-// async function dealCards() {
-//     const response = await fetch('http://localhost:4001/game/deal');
-//     const data = await response.json();
+async function dealCards() {
+    const response = await fetch('http://localhost:4001/game/deal');
+    const data = await response.json();
 
-//     playerHand = data.player;
-//     dealerHand = data.dealer;
+    playerHand = data.player;
+    dealerHand = data.dealer;
 
-//     displayCards('playerCards', playerHand);
-//     displayCards('dealerCards', dealerHand, true);
-// }
+    displayCards('playerCards', playerHand);
+    displayCards('dealerCards', dealerHand, true);
+}
 
-// function displayCards(containerId, cards, hideFirstCard = false) {
-//     const container = document.getElementById(containerId);
-//     container.innerHTML = '';
+function displayCards(containerId, cards, hideFirstCard = false) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
 
-//     cards.forEach((card, index) => {
-//         const cardDiv = document.createElement('div');
-//         cardDiv.className = 'card';
+    cards.forEach((card, index) => {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'card';
 
-//         const cardImg = document.createElement('img');
-//         cardImg.src = (hideFirstCard && index === 0) ? 
-//             "https://www.deckofcardsapi.com/static/img/back.png" :
-//             card.image;
+        const cardImg = document.createElement('img');
+        cardImg.src = (hideFirstCard && index === 0) ? 
+            "https://www.deckofcardsapi.com/static/img/back.png" :
+            card.image;
 
-//         cardDiv.appendChild(cardImg);
-//         container.appendChild(cardDiv);
+        cardDiv.appendChild(cardImg);
+        container.appendChild(cardDiv);
 
-//         if (hideFirstCard && index === 0) {
-//             cardDiv.setAttribute('data-hidden', 'true');
-//         }
-//     });
-// }
+        if (hideFirstCard && index === 0) {
+            cardDiv.setAttribute('data-hidden', 'true');
+        }
+    });
+}
 
-// async function hitPlayer() {
-//     if (playerHand.length < 5) {
-//         const response = await fetch('http://localhost:4001/game/hit', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({
-//                 hand: playerHand
-//             })
-//         });
-//         const newCard = await response.json();
+async function hitPlayer() {
+    if (playerHand.length < 5) {
+        const response = await fetch('http://localhost:4001/game/hit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                hand: playerHand
+            })
+        });
+        const newCard = await response.json();
 
-//         playerHand.push(newCard);
-//         displayCards('playerCards', playerHand);
-//     } else {
-//         alert("Maximum of 5 cards reached for player.");
-//     }
-// }
+        playerHand.push(newCard);
+        displayCards('playerCards', playerHand);
+    } else {
+        alert("Maximum of 5 cards reached for player.");
+    }
+}
 
-// async function stand() {
-//     const dealerFirstCard = document.querySelector('#dealerCards .card[data-hidden="true"]');
-//     if (dealerFirstCard) {
-//         const cardImg = dealerFirstCard.querySelector('img');
-//         setTimeout(() => {
-//             cardImg.src = dealerHand[0].image;
-//             dealerFirstCard.classList.add('flip');
-//             dealerFirstCard.removeAttribute('data-hidden');
-//         }, 1000);
-//     }
+async function stand() {
+    const dealerFirstCard = document.querySelector('#dealerCards .card[data-hidden="true"]');
+    if (dealerFirstCard) {
+        const cardImg = dealerFirstCard.querySelector('img');
+        setTimeout(() => {
+            cardImg.src = dealerHand[0].image;
+            dealerFirstCard.classList.add('flip');
+            dealerFirstCard.removeAttribute('data-hidden');
+        }, 1000);
+    }
 
-//     dealerTurn = true;
-//     while (dealerTurn) {
-//         if (calculateTotal(dealerHand) < 17 && dealerHand.length < 5) {
-//             await hitDealer();
-//         } else {
-//             dealerTurn = false;
-//         }
-//     }
+    dealerTurn = true;
+    while (dealerTurn) {
+        if (calculateTotal(dealerHand) < 17 && dealerHand.length < 5) {
+            await hitDealer();
+        } else {
+            dealerTurn = false;
+        }
+    }
 
-//     const winner = await determineWinner();
-//     alert(`The winner is: ${winner}`);
-// }
+    const winner = await determineWinner();
+    alert(`The winner is: ${winner}`);
+}
 
-// async function hitDealer() {
-//     if (dealerHand.length < 5) {
-//         const response = await fetch('http://localhost:4001/game/hit', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({
-//                 hand: dealerHand
-//             })
-//         });
-//         const newCard = await response.json();
+async function hitDealer() {
+    if (dealerHand.length < 5) {
+        const response = await fetch('http://localhost:4001/game/hit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                hand: dealerHand
+            })
+        });
+        const newCard = await response.json();
 
-//         dealerHand.push(newCard);
-//         displayCards('dealerCards', dealerHand);
-//     } else {
-//         dealerTurn = false;
-//     }
-// }
+        dealerHand.push(newCard);
+        displayCards('dealerCards', dealerHand);
+    } else {
+        dealerTurn = false;
+    }
+}
 
-// async function determineWinner() {
-//     const response = await fetch('http://localhost:4001/game/determineWinner', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({
-//             playerHand: playerHand,
-//             dealerHand: dealerHand
-//         })
-//     });
+    async function determineWinner() {
+        try {
+            console.log(playerHand, dealerHand);
+            const response = await fetch('http://localhost:4001/game/determineWinner', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    playerHand,
+                    dealerHand
+                })
+            });
 
-//     const data = await response.json();
-//     return data.winner;
-// }
+            if (!response.ok) {
+                throw new Error(`Error ${response.status}: ${response.statusText}`);
+            }
 
-// function calculateTotal(hand) {
-//     const cardValues = {
-//         '2': 2,
-//         '3': 3,
-//         '4': 4,
-//         '5': 5,
-//         '6': 6,
-//         '7': 7,
-//         '8': 8,
-//         '9': 9,
-//         '10': 10,
-//         'JACK': 10,
-//         'QUEEN': 10,
-//         'KING': 10,
-//         'ACE': 11
-//     };
+            const data = await response.json();
+            return data.winner;
+        } catch (error) {
+            console.error("Error determining winner:", error);
+            return "Error";
+        }
+    }
 
-//     let total = 0;
-//     let aces = 0;
 
-//     for (let card of hand) {
-//         if (card.value === 'ACE') {
-//             total += cardValues['ACE'];
-//             aces++;
-//         } else {
-//             total += cardValues[card.value];
-//         }
-//     }
+function calculateTotal(hand) {
+    const cardValues = {
+        '2': 2,
+        '3': 3,
+        '4': 4,
+        '5': 5,
+        '6': 6,
+        '7': 7,
+        '8': 8,
+        '9': 9,
+        '10': 10,
+        'JACK': 10,
+        'QUEEN': 10,
+        'KING': 10,
+        'ACE': 11
+    };
 
-//     while (total > 21 && aces > 0) {
-//         total -= 10;
-//         aces--;
-//     }
+    let total = 0;
+    let aces = 0;
 
-//     return total;
-// }
+    for (let card of hand) {
+        if (card.value === 'ACE') {
+            total += cardValues['ACE'];
+            aces++;
+        } else {
+            total += cardValues[card.value];
+        }
+    }
 
-// setupDeck().then(dealCards);
-// fetchTopPlayers();
+    while (total > 21 && aces > 0) {
+        total -= 10;
+        aces--;
+    }
+
+    return total;
+}
+
+setupDeck().then(dealCards);
+fetchTopPlayers();
 
 
     </script>
