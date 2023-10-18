@@ -3,6 +3,9 @@ const router = express.Router();
 const deckData = require('../data/deck');
 const User = require('../models/user');
 
+const dealerCards = document.getElementById('dealerContainer')
+const playerCards = document.getElementById('playerContainer');
+
 let deck = [];
 const setupDeck = () => [...deckData];
 

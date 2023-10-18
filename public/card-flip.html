@@ -1,52 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Card Flip Animation</title>
-    <style>
-      body {
-        margin: 0;
-        overflow: hidden;
-      }
-    </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="test.css">
+
+        <title>Table</title>
+    <title>playCard Flip Animation</title>
   </head>
   <body>
-    <h1 style="position: absolute; color:white">Card Flip Animation</h1>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
-    <script>
-      // Set up scene
-      const scene = new THREE.Scene();
+  <div class="scene scene--playCard">
+    <div class="playCard">
+      <img class="playCard__face playCard__face--front" src="https://www.deckofcardsapi.com/static/img/0H.png">
+      <img class="playCard__face playCard__face--back" src="https://www.deckofcardsapi.com/static/img/back.png">
 
-      // Set up camera
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      camera.position.z = 5;
+    </div>
+  </div>
+  
+  <p>click on card to flip</p>
 
-      // Set up renderer
-      const renderer = new THREE.WebGLRenderer();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      document.body.appendChild(renderer.domElement);
-
-      // Create a card mesh
-      const cardGeometry = new THREE.PlaneGeometry(2, 2);
-      const cardMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide });
-      const card = new THREE.Mesh(cardGeometry, cardMaterial);
-      scene.add(card);
-
-      // Animation variables
-      let rotationAngle = 0;
-      const targetRotation = Math.PI; // Half rotation (180 degrees)
-
-      // Animation function
-      const animate = () => {
-        requestAnimationFrame(animate);
-
-        if (rotationAngle < targetRotation) {
-          rotationAngle += 0.08; // Adjust the rotation speed here
-          card.rotation.y = rotationAngle;
-          renderer.render(scene, camera);
-        }
-      };
-
-      animate();
-    </script>
+    <script src="flip.js"></script>
   </body>
 </html>

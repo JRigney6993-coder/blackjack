@@ -1,12 +1,5 @@
 @import "./partials/normalize";
-// $theme-colors: (
-//   "primary":    #7C0A02,
-//   "secondary":  #562e29,
-//   "accent": #FFD700
-  
-// );
 
-// $main: #7C0A02 !important;
 html, body {
     margin: 0;
     padding: 0;
@@ -75,3 +68,17 @@ btn:focus, a:focus
   .text{
     font-family: Arial, Helvetica, sans-serif;
   }
+
+ 
+  body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+  }
+
+  .center{
+    text-align: center;
+  }
+
