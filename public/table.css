@@ -1,0 +1,111 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+}
+html{
+    height: 100%;
+}
+
+.column {
+    height:90vh;
+    flex: 1;
+    padding: 20px;
+
+}
+
+.column:first-child {
+
+}
+
+.column:last-child {
+ 
+}
+
+body {
+    background: rgb(103, 29, 24) !important;
+    background: radial-gradient(circle, rgba(103, 29, 24, 1) 0%, rgba(64, 13, 10, 1) 83%, rgba(37, 5, 3, 1) 99%, rgba(2, 0, 36, 1) 100%) !important;
+    height: 80vh !important;
+}
+
+.center-box {
+    text-align: center !important;
+}
+
+#play {
+    background-color: #7C0A02 !important;
+    color: white !important;
+}
+
+
+#playCard {
+    width: 30rem;
+    background-color: #E6CCBE;
+    border-radius: 0 !important;
+}
+
+.button:active,
+button:active,
+.button:focus,
+button:focus,
+.button:hover,
+button:hover {
+    border-color: #7C0A02 !important;
+    border: none !important;
+    outline: none !important;
+}
+
+btn:focus,
+a:focus {
+    outline: none;
+}
+
+.navbar-toggler:focus {
+    outline: none !important;
+    box-shadow: none;
+}
+
+@font-face {
+    font-family: title;
+    src: url("../fonts/coolvetica/coolvetica\ rg.otf");
+}
+
+.title {
+    font-size: 8vmin;
+    font-family: title;
+    color:white
+}
+
+.text {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+  .dealerArea {
+      height: 40vh;
+  }
+
+  .playerArea{
+            height: 40vh;
+  }
+  .buttons-container{
+    height:20vh;
+  }
+.hit{
+    font-size: large;
+    background-color: gray;
+    color:white;
+    padding: 1vh 3vh 1vh 3vh;
+}
+.stand {
+    font-size: large;
+    background-color: gray;
+        color: white;
+        padding: 1vh 3vh 1vh 3vh;
+}
+
+h1{
+    margin-top: 1vh;
+    margin-bottom: 4vh;
+}
