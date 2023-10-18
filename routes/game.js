@@ -78,11 +78,6 @@ router.get('/topPlayers', async (req, res) => {
     }
 });
 
-// Blackjack game functions remain unchanged
-
-module.exports = router;
-
-
 
 // Blackjack game functions
 function resetDeck(deck) {
