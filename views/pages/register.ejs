@@ -1,24 +1,68 @@
-<form action="/users/register" method="POST">
-    <h1>Create an Account</h1>
-    <div>
-        <label for="first_name">First Name</label>
-        <input type="text" name="first_name" id="first_name">
-    </div>
-    <div>
-        <label for="last_name">Last Name</label>
-        <input type="text" name="last_name" id="last_name">
-    </div>
-    <div>
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email">
-    </div>
-    <div>
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password">
-    </div>
-    <div>
-        <label for="password2">Re-Enter Password</label>
-        <input type="password" name="password2" id="password2">
-    </div>
-    <button type="submit">Create Account</button>
-</form>
+<div style="display: flex; flex-direction: column; align-items: center; z-index: 10; position: relative; opacity: .7;">
+    <h2 style="color: #e8e6d1; text-align: center; margin-bottom: 30px; font-size: 5vw;">Blackjack Labyrinth</h2>
+    
+    <form action="/users/register" method="POST"
+        style="position: relative; z-index: 10; width: 300px; margin: 0 auto; padding: 20px; background-color: #3c1a1a; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border: 2px solid #6c3a3a; opacity: .7;">
+        
+        <h1 style="color: #e8e6d1; font-family: 'Arial', sans-serif; margin-bottom: 20px;">Create an Account</h1>
+
+        <div style="margin-bottom: 15px;">
+            <label for="first_name" style="display: block; margin-bottom: 5px; color: #e8e6d1;">First Name</label>
+            <input type="text" name="first_name" id="first_name"
+                style="width: 100%; padding: 10px; border: none; border-radius: 5px; background-color: rgba(255, 255, 255, 0.1); color: #e8e6d1;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="last_name" style="display: block; margin-bottom: 5px; color: #e8e6d1;">Last Name</label>
+            <input type="text" name="last_name" id="last_name"
+                style="width: 100%; padding: 10px; border: none; border-radius: 5px; background-color: rgba(255, 255, 255, 0.1); color: #e8e6d1;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="email" style="display: block; margin-bottom: 5px; color: #e8e6d1;">Email</label>
+            <input type="email" name="email" id="email"
+                style="width: 100%; padding: 10px; border: none; border-radius: 5px; background-color: rgba(255, 255, 255, 0.1); color: #e8e6d1;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="password" style="display: block; margin-bottom: 5px; color: #e8e6d1;">Password</label>
+            <input type="password" name="password" id="password"
+                style="width: 100%; padding: 10px; border: none; border-radius: 5px; background-color: rgba(255, 255, 255, 0.1); color: #e8e6d1;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="password2" style="display: block; margin-bottom: 5px; color: #e8e6d1;">Re-Enter Password</label>
+            <input type="password" name="password2" id="password2"
+                style="width: 100%; padding: 10px; border: none; border-radius: 5px; background-color: rgba(255, 255, 255, 0.1); color: #e8e6d1;">
+        </div>
+
+        <button type="submit"
+            style="background-color: #6c3a3a; color: #e8e6d1; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s;">Create Account</button>
+    </form>
+</div>
+
+<!-- Your existing styles and scripts -->
+<style>
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    spline-viewer {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+</style>
+<script type="module" src="https://unpkg.com/@splinetool/viewer@0.9.485/build/spline-viewer.js"></script>
+<spline-viewer loading-anim url="https://prod.spline.design/h-6J9uLUzjUJplxB/scene.splinecode"></spline-viewer>
+

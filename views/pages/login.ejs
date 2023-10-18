@@ -1,12 +1,53 @@
-<form action="/users/login" method="POST">
-    <h1>Log In</h1>
-    <div>
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email">
-    </div>
-    <div>
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password">
-    </div>
-    <button type="submit">Log in</button>
-</form>
+<div style="display: flex; flex-direction: column; align-items: center; z-index: 10; position: relative;">
+    <h2 style="color: #e8e6d1; text-align: center; margin-bottom: 30px; font-size: 5vw;  opacity: .7;">Blackjack Labyrinth</h2>
+    
+    <form action="/users/login" method="POST"
+        style="position: relative; z-index: 10; width: 300px; margin: 0 auto; padding: 20px; background-color: #3c1a1a; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border: 2px solid #6c3a3a; opacity: .7;">
+        <h1 style="color: #e8e6d1; font-family: 'Arial', sans-serif; margin-bottom: 20px;">Log In</h1>
+
+        <div style="margin-bottom: 15px;">
+            <label for="email" style="display: block; margin-bottom: 5px; color: #e8e6d1;">Email</label>
+            <input type="email" name="email" id="email"
+                style="width: 100%; padding: 10px; border: none; border-radius: 5px; background-color: rgba(255, 255, 255, 0.1); color: #e8e6d1;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="password" style="display: block; margin-bottom: 5px; color: #e8e6d1;">Password</label>
+            <input type="password" name="password" id="password"
+                style="width: 100%; padding: 10px; border: none; border-radius: 5px; background-color: rgba(255, 255, 255, 0.1); color: #e8e6d1;">
+        </div>
+
+        <button type="submit"
+            style="background-color: #6c3a3a; color: #e8e6d1; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s;">Log
+            in</button>
+        <p style="text-align: center; margin-top: 15px; color: #e8e6d1;">Do not have an account? <a href="/users/register"
+                style="color: #6c3a3a;">Register here</a>.</p>
+    </form>
+
+</div>
+
+<style>
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    spline-viewer {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+ 
+
+</style>
+<script type="module" src="https://unpkg.com/@splinetool/viewer@0.9.485/build/spline-viewer.js"></script>
+<spline-viewer loading-anim url="https://prod.spline.design/h-6J9uLUzjUJplxB/scene.splinecode"></spline-viewer>
