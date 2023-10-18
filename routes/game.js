@@ -6,7 +6,11 @@ const User = require('../models/user');
 let deck = [];
 const setupDeck = () => [...deckData];
 
-// 
+router.get('/play', (req, res)=>{
+    res.render('pages/table', {
+        user: req.user
+    })
+})
 
 router.get('/setupDeck', (req, res) => {
     resetDeck(deck);
