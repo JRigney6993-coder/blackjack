@@ -32,30 +32,45 @@
     .label{
         display: block; margin-bottom: 5px; color: #e8e6d1;
     }
+    .formStyle{
+        position: relative; z-index: 10; width: 300px; margin: 0 auto; padding: 20px; background-color: #3c1a1a; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border: 2px solid #6c3a3a; opacity: .7;
+    }
+    .headerStyle{
+        color: #e8e6d1; font-family: 'Arial', sans-serif; margin-bottom: 20px;
+    }
+    .inputStyle{
+        width: 100%; padding: 10px; border: none; border-radius: 5px; background-color: rgba(255, 255, 255, 0.1); color: #e8e6d1;
+    }
+    .pgStyle{
+        text-align: center; margin-top: 15px; color: #e8e6d1;
+    }
+    .buttonStyle{
+        background-color: #6c3a3a; color: #e8e6d1; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s;
+    }
 </style>
 <div class="mainContainer">
     <h2 class="h2style">Blackjack Labyrinth</h2>
     
     <form action="/users/login" method="POST"
-        style="position: relative; z-index: 10; width: 300px; margin: 0 auto; padding: 20px; background-color: #3c1a1a; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border: 2px solid #6c3a3a; opacity: .7;">
-        <h1 style="color: #e8e6d1; font-family: 'Arial', sans-serif; margin-bottom: 20px;">Log In</h1>
+        class="formStyle">
+        <h1 class="headerStyle">Log In</h1>
 
         <div class="divStyle">
             <label for="email" class="label">Email</label>
             <input type="email" name="email" id="email"
-                style="width: 100%; padding: 10px; border: none; border-radius: 5px; background-color: rgba(255, 255, 255, 0.1); color: #e8e6d1;">
+                class="inputStyle">
         </div>
 
         <div class="divStyle">
             <label for="password"  class="label">Password</label>
             <input type="password" name="password" id="password"
-                style="width: 100%; padding: 10px; border: none; border-radius: 5px; background-color: rgba(255, 255, 255, 0.1); color: #e8e6d1;">
+                class="inputStyle">
         </div>
 
         <button type="submit"
-            style="background-color: #6c3a3a; color: #e8e6d1; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s;">Log
+            class="buttonStyle">Log
             in</button>
-        <p style="text-align: center; margin-top: 15px; color: #e8e6d1;">Do not have an account? <a href="/users/register"
+        <p class="pgStyle">Do not have an account? <a href="/users/register"
                 style="color: #6c3a3a;">Register here</a>.</p>
     </form>
 
