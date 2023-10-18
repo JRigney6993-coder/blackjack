@@ -11,12 +11,6 @@ router.get('/register', (req, res)=>{
     res.render('pages/register')
 })
 
-router.get('/play', (req, res)=>{
-    res.render('pages/table', {
-        user: req.user
-    })
-})
-
 router.post('/register', (req, res)=>{
     const {first_name, last_name, email, password, password2} = req.body;
     let errors = [];
