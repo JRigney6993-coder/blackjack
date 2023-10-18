@@ -14,7 +14,7 @@
             <div class="dealerArea">
                 <h1 class="title">Dealer</h1>
                 <div class="dealerContainer">
-            
+            <!-- Dealer Cards Should Show Up Here -->
                   
                 </div>
             </div>
@@ -28,21 +28,25 @@
                         <button class="stand" onclick="endGame()">STAND</button>
                     </div>
                     <div class="playerContainer">
-                    
+                        <!-- Player Cards Should Show Up Here -->
+
 
                     </div>
                 </div>
             </div>
     </div>
     <div class="column">
-        <h1 class="title">Leaderboard</h1>        
+        <h1 class="title">Leaderboard</h1>
+        <div class="leaderboardData">
+            <h1>Top Players</h1>
+            <div id="leaderboard"class="leaderboard"></div>
+        </div>
     </div>
 
 
-
-
-        <script src="flip.js"></script>
-
+        <script src="../routes/game.js"></script>
+        <script src="./cards.js"></script>
+        <script src="./leaderboard.js"></script>
 </body>
 
 </html>

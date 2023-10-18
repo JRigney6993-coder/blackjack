@@ -3,9 +3,6 @@ const router = express.Router();
 const deckData = require('../data/deck');
 const User = require('../models/user');
 
-const dealerCards = document.getElementById('dealerContainer')
-const playerCards = document.getElementById('playerContainer');
-
 let deck = [];
 const setupDeck = () => [...deckData];
 
@@ -78,7 +75,6 @@ router.get('/topPlayers', async (req, res) => {
         res.status(500).send({ message: "Error fetching top players", error });
     }
 });
-
 
 // Blackjack game functions
 function resetDeck(deck) {
