@@ -1,4 +1,4 @@
-const express = require('express'); //hi
+const express = require('express'); 
 const session = require('express-session');
 const flash = require('connect-flash');
 const morgan = require('morgan');
@@ -43,5 +43,7 @@ app.use((req, res, next) => {
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 app.use('/game', require('./routes/game'));
+
+app.use(express.static('public'));
 
 app.listen(process.env.PORT || 4000)
