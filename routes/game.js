@@ -3,17 +3,14 @@ const router = express.Router();
 const deckData = require('../data/deck');
 const User = require('../models/user');
 
-const dealerCards = document.getElementById('dealerContainer')
-const playerCards = document.getElementById('playerContainer');
-
 let deck = [];
 const setupDeck = () => [...deckData];
 
-router.get('/play', (req, res)=>{
+router.get('/play', (req, res) => {
     res.render('pages/table', {
         user: req.user
-    })
-})
+    });
+});
 
 router.get('/setupDeck', (req, res) => {
     resetDeck(deck);
@@ -26,21 +23,22 @@ router.get('/deal', (req, res) => {
 });
 
 router.post('/hit', (req, res) => {
-    const { hand } = req.body;
-    try {
-        hit(hand, deck);
-    } catch {
+    if (deck.length === 0) {
         resetDeck(deck);
-        hit(hand, deck);
     }
-    res.send(hand);
+    const newCard = getRandomCard(deck);
+    res.send(newCard);
 });
 
 router.post('/determineWinner', async (req, res) => {
-    const { playerHand, dealerHand } = req.body;
+    let { playerHand, dealerHand } = req.body;
+
+    // Let the dealer play their turn fully
+    dealerHand = dealerPlay(dealerHand, deck);
+
     const winner = determineWinner(playerHand, dealerHand);
 
-    if (req.isAuthenticated()) { 
+    if (req.isAuthenticated()) {
         const userId = req.user._id;
 
         if (winner === "Player") {
@@ -52,6 +50,7 @@ router.post('/determineWinner', async (req, res) => {
 
     res.send({ winner });
 });
+
 
 router.get('/topPlayers', async (req, res) => {
     try {
@@ -79,6 +78,11 @@ router.get('/topPlayers', async (req, res) => {
     }
 });
 
+// Blackjack game functions remain unchanged
+
+module.exports = router;
+
+
 
 // Blackjack game functions
 function resetDeck(deck) {
@@ -105,44 +109,62 @@ function hit(hand, deck) {
 }
 
 function calculateTotal(hand) {
+    if (!Array.isArray(hand)) {
+        console.error("hand is not an array:", hand);
+        return 0;
+    }
+
     const cardValues = {
         'j': 10,
         'q': 10,
         'k': 10,
+        'a': 11
     };
 
     let total = 0;
     let aces = 0;
 
     for (let card of hand) {
-        if (Array.isArray(card.value)) {
-            total += 11;
+        if (card.value === 'a') {
+            total += cardValues[card.value];
             aces++;
+        } else if (["j", "q", "k"].includes(card.value)) {
+            total += cardValues[card.value];
         } else {
-            total += cardValues[card.value] || card.value;
+            total += card.value;
         }
     }
 
-    while (total > 21 && aces--) {
+    // If total is over 21 and we have Aces, reduce total by 10 for each Ace
+    while (total > 21 && aces > 0) {
         total -= 10;
+        aces--;
     }
 
     return total;
 }
 
+function dealerPlay(dealerHand, deck) {
+    while (calculateTotal(dealerHand) < 17) {
+        dealerHand.push(getRandomCard(deck));
+    }
+    return dealerHand;
+}
+
+
 function determineWinner(playerHand, dealerHand) {
     const playerTotal = calculateTotal(playerHand);
     const dealerTotal = calculateTotal(dealerHand);
+    
 
-    if (playerTotal > 21 || (dealerTotal <= 21 && dealerTotal >= playerTotal)) {
-        return "Dealer";
-    }
+    if (playerTotal > 21) return "Dealer"; // Player busts
+    if (dealerTotal > 21) return "Player"; // Dealer busts
 
-    if (dealerTotal > 21 || playerTotal > dealerTotal) {
-        return "Player";
-    }
+    // Draw should be the last condition checked
+    if (playerTotal === dealerTotal) return "Draw"; 
 
-    return "Draw";
+    return playerTotal > dealerTotal ? "Player" : "Dealer";
 }
+
 
 module.exports = router;
