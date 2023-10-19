@@ -50,6 +50,7 @@
         .title {
             font-size: 2em;
             margin-bottom: 20px;
+            color: #e8e6d1;
         }
 
         .actions {
@@ -91,11 +92,52 @@
 }
 
 .card {
-    width: 60px; 
-    height: 90px; 
-    transition: transform 0.5s;
-    transform-style: preserve-3d;
+    width: 60px;
+    height: 90px;
+    perspective: 1000px;
 }
+
+.card .card-inner {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+}
+
+.card .card-inner.flipped {
+    transform: rotateY(180deg);
+}
+
+.card .card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+
+@keyframes slideInFromBottom {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.slide-in {
+    animation: slideInFromBottom 0.5s forwards;
+}
+
+.card .card-face.front {
+    transform: rotateY(0deg);
+}
+
+.card .card-face.back {
+    transform: rotateY(180deg);
+}
+
 
     .card img {
         width: 100%;
@@ -125,11 +167,14 @@
             <div id="player">
                 <div class="title">Player</div>
                 <div id="playerCards"></div>
-                <div class="actions">
-                    <button class="btn" onclick="hitPlayer()">Hit</button>
-                    <button class="btn" onclick="stand()">Stand</button>
-                </div>
+<div class="actions">
+    <button class="btn" onclick="hitPlayer()">Hit</button>
+    <button class="btn" onclick="stand()">Stand</button>
+    <button class="btn" onclick="newGame()">New Game</button>
+</div>
+
             </div>
+            <div id="gameMessage" class="title" style="margin: 0;"></div>
         </div>
 
         <!-- Leaderboard -->
@@ -140,183 +185,120 @@
             </ul>
         </div>
     </div>
+    
 
 
     <script>
-//         let playerHand = [];
-// let dealerHand = [];
-// let dealerTurn = false;
+let dealerCards = [];
+let playerCards = [];
 
-// async function fetchTopPlayers() {
-//     const response = await fetch('http://localhost:4001/game/topPlayers');
-//     const players = await response.json();
+document.addEventListener("DOMContentLoaded", function() {
+    fetchTopPlayers();
+    startGame();
+});
 
-//     const leaderboard = document.querySelector('.leaderboard-list');
-//     leaderboard.innerHTML = '';
+async function fetchTopPlayers() {
+    const response = await fetch('http://localhost:4001/game/topPlayers');
+    const players = await response.json();
+    const leaderboard = document.querySelector('.leaderboard-list');
+    leaderboard.innerHTML = '';
+    players.forEach(player => {
+        const li = document.createElement('li');
+        li.textContent = `${player.first_name} ${player.last_name} - Score: ${player.difference}`;
+        leaderboard.appendChild(li);
+    });
+}
 
-//     players.forEach(player => {
-//         const li = document.createElement('li');
-//         li.textContent = `${player.first_name} ${player.last_name} - Score: ${player.difference}`;
-//         leaderboard.appendChild(li);
-//     });
-// }
+function startGame() {
+    fetch('/game/start')
+    .then(response => response.json())
+    .then(data => {
+        dealerCards = data.dealerCards;
+        playerCards = data.playerCards;
+        newGame()
+    });
+}
 
-// async function setupDeck() {
-//     await fetch('http://localhost:4001/game/setupDeck');
-// }
 
-// async function dealCards() {
-//     const response = await fetch('http://localhost:4001/game/deal');
-//     const data = await response.json();
+function newGame() {
+    fetch('/game/newGame')
+    .then(response => response.json())
+    .then(data => {
+        dealerCards = data.dealerCards;
+        playerCards = data.playerCards;
+        renderCards(true);
+    });
+}
 
-//     playerHand = data.player;
-//     dealerHand = data.dealer;
 
-//     displayCards('playerCards', playerHand);
-//     displayCards('dealerCards', dealerHand, true);
-// }
 
-// function displayCards(containerId, cards, hideFirstCard = false) {
-//     const container = document.getElementById(containerId);
-//     container.innerHTML = '';
+function hitPlayer() {
+    fetch('/game/hit')
+    .then(response => response.json())
+    .then(data => {
+        playerCards = data.playerCards;
+        renderCards();
 
-//     cards.forEach((card, index) => {
-//         const cardDiv = document.createElement('div');
-//         cardDiv.className = 'card';
+        const gameMessage = document.getElementById('gameMessage');
 
-//         const cardImg = document.createElement('img');
-//         cardImg.src = (hideFirstCard && index === 0) ? 
-//             "https://www.deckofcardsapi.com/static/img/back.png" :
-//             card.image;
+        if (data.message === 'Player busts! Dealer wins!') {
+            gameMessage.textContent = 'Player busts! Dealer wins!';
+        } else if (data.message === 'Player automatically wins with 5 cards!') {
+            gameMessage.textContent = 'Player automatically wins with 5 cards!';
+        } else {
+            gameMessage.textContent = ''; 
+        }
+    });
+}
 
-//         cardDiv.appendChild(cardImg);
-//         container.appendChild(cardDiv);
 
-//         if (hideFirstCard && index === 0) {
-//             cardDiv.setAttribute('data-hidden', 'true');
-//         }
-//     });
-// }
 
-// async function hitPlayer() {
-//     if (playerHand.length < 5) {
-//         const response = await fetch('http://localhost:4001/game/hit', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({
-//                 hand: playerHand
-//             })
-//         });
-//         const newCard = await response.json();
+function stand() {
+    // Flip the card first
+    const hiddenCard = document.querySelector('#dealerCards .card-inner');
+    if (hiddenCard) {
+        hiddenCard.classList.add('flipped');
+    }
 
-//         playerHand.push(newCard);
-//         displayCards('playerCards', playerHand);
-//     } else {
-//         alert("Maximum of 5 cards reached for player.");
-//     }
-// }
+    setTimeout(() => {
+        fetch('/game/stand')
+        .then(response => response.json())
+        .then(data => {
+            dealerCards = data.dealerCards;
+            renderCards();
 
-// async function stand() {
-//     const dealerFirstCard = document.querySelector('#dealerCards .card[data-hidden="true"]');
-//     if (dealerFirstCard) {
-//         const cardImg = dealerFirstCard.querySelector('img');
-//         setTimeout(() => {
-//             cardImg.src = dealerHand[0].image;
-//             dealerFirstCard.classList.add('flip');
-//             dealerFirstCard.removeAttribute('data-hidden');
-//         }, 1000);
-//     }
+            document.getElementById('gameMessage').textContent = data.message;
+        });
+    }, 500);
+}
 
-//     dealerTurn = true;
-//     while (dealerTurn) {
-//         if (calculateTotal(dealerHand) < 17 && dealerHand.length < 5) {
-//             await hitDealer();
-//         } else {
-//             dealerTurn = false;
-//         }
-//     }
 
-//     const winner = await determineWinner();
-//     alert(`The winner is: ${winner}`);
-// }
 
-// async function hitDealer() {
-//     if (dealerHand.length < 5) {
-//         const response = await fetch('http://localhost:4001/game/hit', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({
-//                 hand: dealerHand
-//             })
-//         });
-//         const newCard = await response.json();
 
-//         dealerHand.push(newCard);
-//         displayCards('dealerCards', dealerHand);
-//     } else {
-//         dealerTurn = false;
-//     }
-// }
 
-// async function determineWinner() {
-//     const response = await fetch('http://localhost:4001/game/determineWinner', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({
-//             playerHand: playerHand,
-//             dealerHand: dealerHand
-//         })
-//     });
+function renderCards(newGame = false) {
+    const dealerDiv = document.getElementById('dealerCards');
+    const playerDiv = document.getElementById('playerCards');
 
-//     const data = await response.json();
-//     return data.winner;
-// }
+    const isDealerCardFlipped = document.querySelector('#dealerCards .card-inner.flipped');
 
-// function calculateTotal(hand) {
-//     const cardValues = {
-//         '2': 2,
-//         '3': 3,
-//         '4': 4,
-//         '5': 5,
-//         '6': 6,
-//         '7': 7,
-//         '8': 8,
-//         '9': 9,
-//         '10': 10,
-//         'JACK': 10,
-//         'QUEEN': 10,
-//         'KING': 10,
-//         'ACE': 11
-//     };
+    dealerDiv.innerHTML = dealerCards.map((card, index) => {
+        if (index === 0) {
+            return `
+                <div class="card ${newGame ? 'slide-in' : ''}">
+                    <div class="card-inner ${isDealerCardFlipped ? 'flipped' : ''}"> 
+                        <div class="card-face front"><img src="https://www.deckofcardsapi.com/static/img/back.png"></div>
+                        <div class="card-face back"><img src="${card.image}"></div>
+                    </div>
+                </div>
+            `;
+        }
+        return `<img src="${card.image}" class="card ${newGame ? 'slide-in' : ''}">`;
+    }).join("");
 
-//     let total = 0;
-//     let aces = 0;
+    playerDiv.innerHTML = playerCards.map(card => `<img src="${card.image}" class="card ${newGame ? 'slide-in' : ''}">`).join("");
+}
 
-//     for (let card of hand) {
-//         if (card.value === 'ACE') {
-//             total += cardValues['ACE'];
-//             aces++;
-//         } else {
-//             total += cardValues[card.value];
-//         }
-//     }
-
-//     while (total > 21 && aces > 0) {
-//         total -= 10;
-//         aces--;
-//     }
-
-//     return total;
-// }
-
-// setupDeck().then(dealCards);
-// fetchTopPlayers();
 
 
     </script>
