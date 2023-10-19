@@ -198,7 +198,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 async function fetchTopPlayers() {
-    const response = await fetch('http://localhost:4001/game/topPlayers');
+    const response = await fetch('/game/topPlayers');
     const players = await response.json();
     const leaderboard = document.querySelector('.leaderboard-list');
     leaderboard.innerHTML = '';
@@ -221,14 +221,26 @@ function startGame() {
 
 
 function newGame() {
+    toggleNewGameButton(false);
+    gameMessage.textContent = ''; 
     fetch('/game/newGame')
     .then(response => response.json())
     .then(data => {
         dealerCards = data.dealerCards;
         playerCards = data.playerCards;
         renderCards(true);
+        fetchTopPlayers()
     });
 }
+
+    function toggleNewGameButton(show) {
+        const btnNewGame = document.querySelector('.actions button[onclick="newGame()"]');
+        if (show) {
+            btnNewGame.style.display = 'block';
+        } else {
+            btnNewGame.style.display = 'none';
+        }
+    }
 
 
 
@@ -243,8 +255,11 @@ function hitPlayer() {
 
         if (data.message === 'Player busts! Dealer wins!') {
             gameMessage.textContent = 'Player busts! Dealer wins!';
+            toggleNewGameButton(true); 
         } else if (data.message === 'Player automatically wins with 5 cards!') {
             gameMessage.textContent = 'Player automatically wins with 5 cards!';
+            toggleNewGameButton(true);
+
         } else {
             gameMessage.textContent = ''; 
         }
@@ -268,6 +283,9 @@ function stand() {
             renderCards();
 
             document.getElementById('gameMessage').textContent = data.message;
+
+            toggleNewGameButton(true);
+            
         });
     }, 500);
 }
@@ -280,7 +298,7 @@ function renderCards(newGame = false) {
     const dealerDiv = document.getElementById('dealerCards');
     const playerDiv = document.getElementById('playerCards');
 
-    const isDealerCardFlipped = document.querySelector('#dealerCards .card-inner.flipped');
+    const isDealerCardFlipped = !newGame && document.querySelector('#dealerCards .card-inner.flipped');
 
     dealerDiv.innerHTML = dealerCards.map((card, index) => {
         if (index === 0) {
@@ -298,6 +316,7 @@ function renderCards(newGame = false) {
 
     playerDiv.innerHTML = playerCards.map(card => `<img src="${card.image}" class="card ${newGame ? 'slide-in' : ''}">`).join("");
 }
+
 
 
 
